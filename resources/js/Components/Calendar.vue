@@ -17,8 +17,10 @@
                         <span class="day-label text-sm text-gray-900">{{ day.day }}</span>
                         <div class="flex-grow overflow-y-auto overflow-x-auto">
                             <div class="calendar__event rounded mb-1" v-for="attr in attributes" :key="attr.time" :class="attr.customData.class">
-                                <div class="calendar__event-text"><span>{{attr.customData.title}}</span></div>
-                                <div class="calendar__event-time"><span>{{attr.customData.time}}</span></div>
+                                <div class="calendar__event-text">Услуга: <span>{{attr.customData.service}}</span></div>
+                                <div class="calendar__event-text">Фио: <span>{{attr.customData.name}}</span></div>
+                                <div class="calendar__event-text">Телефон: <span>{{attr.customData.tel}}</span></div>
+                                <div class="calendar__event-time">Время: <span>{{attr.customData.time}}</span></div>
                             </div>
                         </div>
                     </div>
@@ -38,38 +40,15 @@ export default {
                 weekdays: 'WWW',
                 title: "MMMM"
             },
-            attributes: [
-                {
-                    key: 1,
-                    customData: {
-                        title: 'Lunch with mom.',
-                        time: '12:00',
-                        class: 'bg-green-600 text-white p-1',
-                    },
-                    dates: new Date(year, month, 1),
-                },
-                {
-                    key: 2,
-                    customData: {
-                        title: 'Jerk off',
-                        time: '14:00',
-                        class: 'bg-blue-600 text-white p-1',
-                    },
-                    dates: new Date(year, month, 1),
-                },
-            ],
+            attributes: null
         };
     },
     async mounted(){
-        let formData = new FormData();
+        let res = await fetch('/api/entries')
+            .then(response => response.json());
 
-        let res = await fetch('/api/calendar/get/', {
-            method: 'POST',
-            body: formData,
-        });
-
-        let json = await res.json();
-        this.attributes = json.data;
+        this.attributes = res.data;
+        console.log(res.data);
     }
 };
 </script>
